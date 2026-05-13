@@ -1,0 +1,13 @@
+#!/bin/sh
+set -e
+
+if ! git diff --cached --name-only --diff-filter=ACMR | grep -E '\.cs$' >/dev/null 2>&1; then
+  exit 0
+fi
+
+dotnet tool restore
+dotnet csharpier format .
+
+git diff --name-only --diff-filter=ACMR | grep -E '\.cs$' | while IFS= read -r file; do
+  git add -- "$file"
+done
