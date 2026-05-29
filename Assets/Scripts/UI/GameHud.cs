@@ -3,6 +3,8 @@ using SuikaGame.Fruit;
 using SuikaGame.Game;
 using SuikaGame.Spawner;
 using UnityEngine;
+using UnityEngine.EventSystems;
+using UnityEngine.InputSystem.UI;
 using UnityEngine.UI;
 
 namespace SuikaGame.UI
@@ -22,7 +24,9 @@ namespace SuikaGame.UI
         private Text bestText;
         private Text nextTitleText;
         private Image nextFruitImage;
-        private Text gameOverText;
+        private GameObject gameOverPanel;
+        private Text gameOverScoreText;
+        private Button restartButton;
 
         private void Awake()
         {
@@ -37,6 +41,7 @@ namespace SuikaGame.UI
             if (gameManager != null)
             {
                 gameManager.ScoreChanged += HandleScoreChanged;
+                gameManager.GameOver += HandleGameOver;
             }
         }
 
@@ -45,6 +50,7 @@ namespace SuikaGame.UI
             if (gameManager != null)
             {
                 gameManager.ScoreChanged -= HandleScoreChanged;
+                gameManager.GameOver -= HandleGameOver;
             }
         }
 
@@ -54,6 +60,11 @@ namespace SuikaGame.UI
         }
 
         private void HandleScoreChanged(int score)
+        {
+            RefreshHud();
+        }
+
+        private void HandleGameOver()
         {
             RefreshHud();
         }
@@ -75,12 +86,25 @@ namespace SuikaGame.UI
             scaler.referenceResolution = new Vector2(1152f, 768f);
             scaler.matchWidthOrHeight = 0.5f;
             canvasObject.AddComponent<GraphicRaycaster>();
+            CreateEventSystemIfMissing();
 
             CreateScoreBubble(canvasObject.transform);
             CreateNextBubble(canvasObject.transform);
             CreateEvolutionRing(canvasObject.transform);
-            CreateGameOverLabel(canvasObject.transform);
+            CreateGameOverPanel(canvasObject.transform);
             RefreshHud();
+        }
+
+        private static void CreateEventSystemIfMissing()
+        {
+            if (Object.FindFirstObjectByType<EventSystem>() != null)
+            {
+                return;
+            }
+
+            var eventSystemObject = new GameObject("EventSystem");
+            eventSystemObject.AddComponent<EventSystem>();
+            eventSystemObject.AddComponent<InputSystemUIInputModule>();
         }
 
         private void CreateScoreBubble(Transform parent)
@@ -110,8 +134,24 @@ namespace SuikaGame.UI
                 bubble.transform,
                 "0",
                 34,
-                new Vector2(0f, 2f),
+                new Vector2(0f, 10f),
                 new Vector2(160f, 46f)
+            );
+            CreateText(
+                "Best Title",
+                bubble.transform,
+                "최고 점수",
+                18,
+                new Vector2(0f, -36f),
+                new Vector2(160f, 28f)
+            );
+            bestText = CreateText(
+                "Best",
+                bubble.transform,
+                "0",
+                22,
+                new Vector2(0f, -66f),
+                new Vector2(160f, 30f)
             );
         }
 
@@ -187,19 +227,51 @@ namespace SuikaGame.UI
             }
         }
 
-        private void CreateGameOverLabel(Transform parent)
+        private void CreateGameOverPanel(Transform parent)
         {
-            gameOverText = CreateText(
-                "Game Over",
+            gameOverPanel = CreateImage(
+                "Game Over Panel",
                 parent,
-                "Game Over",
-                54,
+                SuikaAssetProvider.LoadUiSprite("Bubble")
+            ).gameObject;
+            SetRect(
+                gameOverPanel.GetComponent<RectTransform>(),
                 Vector2.zero,
-                new Vector2(420f, 90f),
+                new Vector2(420f, 300f),
                 new Vector2(0.5f, 0.5f)
             );
-            gameOverText.color = Color.black;
-            gameOverText.enabled = false;
+
+            CreateText(
+                "Game Over Title",
+                gameOverPanel.transform,
+                "Game Over",
+                48,
+                new Vector2(0f, 88f),
+                new Vector2(340f, 70f)
+            );
+            gameOverScoreText = CreateText(
+                "Game Over Score",
+                gameOverPanel.transform,
+                "Score 0",
+                30,
+                new Vector2(0f, 18f),
+                new Vector2(340f, 50f)
+            );
+
+            restartButton = CreateButton(
+                "Restart Button",
+                gameOverPanel.transform,
+                "다시 시작",
+                new Vector2(0f, -78f),
+                new Vector2(190f, 56f)
+            );
+            restartButton.onClick.AddListener(HandleRestartClicked);
+            gameOverPanel.SetActive(false);
+        }
+
+        private void HandleRestartClicked()
+        {
+            gameManager?.RestartGame();
         }
 
         private void RefreshHud()
@@ -224,10 +296,34 @@ namespace SuikaGame.UI
                     : Color.white;
             }
 
-            if (gameOverText != null)
+            if (gameOverPanel != null)
             {
-                gameOverText.enabled = gameManager != null && !gameManager.IsPlaying;
+                var isGameOver = gameManager != null && !gameManager.IsPlaying;
+                gameOverPanel.SetActive(isGameOver);
+                if (gameOverScoreText != null)
+                {
+                    gameOverScoreText.text = $"Score {gameManager?.Score ?? 0}";
+                }
             }
+        }
+
+        private static Button CreateButton(
+            string name,
+            Transform parent,
+            string label,
+            Vector2 position,
+            Vector2 size
+        )
+        {
+            var image = CreateImage(name, parent, SuikaAssetProvider.LoadUiSprite("Bubble"));
+            image.color = new Color(1f, 0.86f, 0.48f, 0.95f);
+            SetRect(image.rectTransform, position, size, new Vector2(0.5f, 0.5f));
+
+            var button = image.gameObject.AddComponent<Button>();
+            button.targetGraphic = image;
+            var text = CreateText($"{name} Label", image.transform, label, 24, Vector2.zero, size);
+            text.raycastTarget = false;
+            return button;
         }
 
         private static Image CreateImage(string name, Transform parent, Sprite sprite)

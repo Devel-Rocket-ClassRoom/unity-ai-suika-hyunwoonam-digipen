@@ -1,6 +1,7 @@
 using NUnit.Framework;
 using SuikaGame.Art;
 using SuikaGame.Fruit;
+using SuikaGame.Game;
 using UnityEngine;
 using UnityEngine.TestTools;
 
@@ -29,6 +30,31 @@ namespace SuikaGame.Tests.EditMode
             {
                 var expectedScore = definition.Level * (definition.Level + 1) / 2;
                 Assert.That(definition.MergeScore, Is.EqualTo(expectedScore));
+            }
+        }
+
+        [Test]
+        public void DefaultCatalog_UsesDoubleSizedMissionFruitRadii()
+        {
+            var definitions = FruitCatalog.CreateDefaultDefinitions();
+            var expectedRadii = new[]
+            {
+                0.46f,
+                0.58f,
+                0.72f,
+                0.9f,
+                1.1f,
+                1.36f,
+                1.66f,
+                2f,
+                2.4f,
+                2.86f,
+                3.4f,
+            };
+
+            for (var index = 0; index < expectedRadii.Length; index++)
+            {
+                Assert.That(definitions[index].Radius, Is.EqualTo(expectedRadii[index]));
             }
         }
 
@@ -81,6 +107,25 @@ namespace SuikaGame.Tests.EditMode
                 Is.Null
             );
             Assert.That(SuikaAssetProvider.LoadUiSprite("MissingOptionalUiSprite"), Is.Null);
+        }
+
+        [Test]
+        public void GameOver_RetainsFinalScoreAndRaisesResultEvent()
+        {
+            var managerObject = new GameObject("Game Manager Under Test");
+            var manager = managerObject.AddComponent<GameManager>();
+            var gameOverRaised = false;
+            manager.GameOver += () => gameOverRaised = true;
+
+            manager.StartGame();
+            manager.AddScore(21);
+            manager.TriggerGameOver();
+
+            Assert.That(manager.IsPlaying, Is.False);
+            Assert.That(manager.Score, Is.EqualTo(21));
+            Assert.That(gameOverRaised, Is.True);
+
+            Object.DestroyImmediate(managerObject);
         }
     }
 }

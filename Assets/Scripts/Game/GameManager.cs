@@ -1,5 +1,6 @@
 using System;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace SuikaGame.Game
 {
@@ -71,6 +72,12 @@ namespace SuikaGame.Game
             }
 
             GameOver?.Invoke();
+        }
+
+        public void RestartGame()
+        {
+            Time.timeScale = 1f;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
     }
 }
