@@ -8,13 +8,13 @@ namespace SuikaGame.Game
 {
     public static class MissionOneBootstrap
     {
-        private const float LeftWallX = -3.1f;
-        private const float RightWallX = 3.1f;
-        private const float BottomWallY = -3.4f;
-        private const float WallThickness = 0.25f;
-        private const float ContainerHeight = 6.1f;
-        private const float WallBottomOverlap = 0.75f;
-        private const float DeadLineY = 2.55f;
+        private const float LeftWallX = -3.294f;
+        private const float RightWallX = 3.294f;
+        private const float BottomWallY = -3.975f;
+        private const float SideWallThickness = 0.65f;
+        private const float BottomWallThickness = 0.2f;
+        private const float ContainerHeight = 8.15f;
+        private const float DeadLineY = 4.075f; // Top of the interior area of ContainerBox.png at 80 PPU
 
         [RuntimeInitializeOnLoadMethod(RuntimeInitializeLoadType.AfterSceneLoad)]
         private static void Bootstrap()
@@ -45,22 +45,30 @@ namespace SuikaGame.Game
                 -10
             );
             EnsureScreenFillingBackground(background);
-            CreateVisualPanelIfMissing(
-                "Container Interior",
-                Vector2.zero,
-                new Vector2(5.1f, 5.2f),
-                SuikaAssetProvider.LoadBackgroundSprite("ContainerInterior"),
-                new Color(1f, 0.89f, 0.58f),
-                0
-            );
-            CreateVisualPanelIfMissing(
-                "Container Top Border",
-                new Vector2(0f, 2.76f),
-                new Vector2(5.6f, 0.38f),
-                SuikaAssetProvider.LoadBackgroundSprite("ContainerBorder"),
-                new Color(0.86f, 0.74f, 0.36f),
-                3
-            );
+
+            var boxSprite = SuikaAssetProvider.LoadBackgroundSprite("ContainerBox");
+            if (boxSprite != null)
+            {
+                CreateVisualPanelIfMissing(
+                    "Container Box",
+                    Vector2.zero,
+                    new Vector2(1f, 1f),
+                    boxSprite,
+                    Color.white,
+                    1
+                ).transform.localScale = Vector3.one;
+            }
+            else
+            {
+                CreateVisualPanelIfMissing(
+                    "Container Interior",
+                    Vector2.zero,
+                    new Vector2(5.1f, 5.2f),
+                    SuikaAssetProvider.LoadBackgroundSprite("ContainerInterior"),
+                    new Color(1f, 0.89f, 0.58f),
+                    0
+                );
+            }
         }
 
         private static void ConfigureCamera()
@@ -73,9 +81,9 @@ namespace SuikaGame.Game
                 cameraObject.AddComponent<AudioListener>();
             }
 
-            camera.transform.position = new Vector3(0f, 0f, -10f);
+            camera.transform.position = new Vector3(0f, 1.25f, -10f);
             camera.orthographic = true;
-            camera.orthographicSize = 4.6f;
+            camera.orthographicSize = 6.0f;
             camera.backgroundColor = new Color(0.98f, 0.95f, 0.88f);
         }
 
@@ -100,36 +108,53 @@ namespace SuikaGame.Game
 
         private static void CreateContainer()
         {
-            CreateVisualPanel(
-                "Container Interior",
-                Vector2.zero,
-                new Vector2(5.1f, 5.2f),
-                SuikaAssetProvider.LoadBackgroundSprite("ContainerInterior"),
-                new Color(1f, 0.89f, 0.58f),
-                0
-            );
-            CreateVisualPanel(
-                "Container Top Border",
-                new Vector2(0f, 2.76f),
-                new Vector2(5.6f, 0.38f),
-                SuikaAssetProvider.LoadBackgroundSprite("ContainerBorder"),
-                new Color(0.86f, 0.74f, 0.36f),
-                3
-            );
+            var boxSprite = SuikaAssetProvider.LoadBackgroundSprite("ContainerBox");
+            if (boxSprite != null)
+            {
+                var box = CreateVisualPanel(
+                    "Container Box",
+                    Vector2.zero,
+                    new Vector2(1f, 1f),
+                    boxSprite,
+                    Color.white,
+                    1
+                );
+                box.transform.localScale = Vector3.one;
+            }
+            else
+            {
+                CreateVisualPanel(
+                    "Container Interior",
+                    Vector2.zero,
+                    new Vector2(5.1f, 5.2f),
+                    SuikaAssetProvider.LoadBackgroundSprite("ContainerInterior"),
+                    new Color(1f, 0.89f, 0.58f),
+                    0
+                );
+                CreateVisualPanel(
+                    "Container Top Border",
+                    new Vector2(0f, 2.76f),
+                    new Vector2(5.6f, 0.38f),
+                    SuikaAssetProvider.LoadBackgroundSprite("ContainerBorder"),
+                    new Color(0.86f, 0.74f, 0.36f),
+                    3
+                );
+            }
+
             CreateWall(
                 "Left Wall",
-                new Vector2(LeftWallX, BottomWallY + (ContainerHeight - WallBottomOverlap) * 0.5f),
-                new Vector2(WallThickness, ContainerHeight + WallBottomOverlap)
+                new Vector2(LeftWallX, 0f),
+                new Vector2(SideWallThickness, ContainerHeight)
             );
             CreateWall(
                 "Right Wall",
-                new Vector2(RightWallX, BottomWallY + (ContainerHeight - WallBottomOverlap) * 0.5f),
-                new Vector2(WallThickness, ContainerHeight + WallBottomOverlap)
+                new Vector2(RightWallX, 0f),
+                new Vector2(SideWallThickness, ContainerHeight)
             );
             CreateWall(
                 "Bottom Wall",
                 new Vector2(0f, BottomWallY),
-                new Vector2(RightWallX - LeftWallX + WallThickness * 3f, WallThickness)
+                new Vector2(RightWallX - LeftWallX + SideWallThickness, BottomWallThickness)
             );
         }
 
@@ -218,8 +243,8 @@ namespace SuikaGame.Game
 
             var line = deadLine.AddComponent<LineRenderer>();
             line.positionCount = 2;
-            line.SetPosition(0, new Vector3(LeftWallX + WallThickness, DeadLineY, 0f));
-            line.SetPosition(1, new Vector3(RightWallX - WallThickness, DeadLineY, 0f));
+            line.SetPosition(0, new Vector3(LeftWallX + SideWallThickness * 0.5f, DeadLineY, 0f));
+            line.SetPosition(1, new Vector3(RightWallX - SideWallThickness * 0.5f, DeadLineY, 0f));
             line.startWidth = 0.035f;
             line.endWidth = 0.035f;
             line.material = new Material(Shader.Find("Sprites/Default"));

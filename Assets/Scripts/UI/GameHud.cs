@@ -78,7 +78,6 @@ namespace SuikaGame.UI
 
             CreateScoreBubble(canvasObject.transform);
             CreateNextBubble(canvasObject.transform);
-            CreateLeaderboard(canvasObject.transform);
             CreateEvolutionRing(canvasObject.transform);
             CreateGameOverLabel(canvasObject.transform);
             RefreshHud();
@@ -89,7 +88,7 @@ namespace SuikaGame.UI
             var bubble = CreateImage(
                 "Score Bubble",
                 parent,
-                SuikaAssetProvider.LoadUiSprite("ScoreBubble")
+                SuikaAssetProvider.LoadUiSprite("Bubble")
             );
             SetRect(
                 bubble.rectTransform,
@@ -114,22 +113,6 @@ namespace SuikaGame.UI
                 new Vector2(0f, 2f),
                 new Vector2(160f, 46f)
             );
-            CreateText(
-                "Best Title",
-                bubble.transform,
-                "최고 점수",
-                18,
-                new Vector2(0f, -42f),
-                new Vector2(160f, 28f)
-            );
-            bestText = CreateText(
-                "Best",
-                bubble.transform,
-                "0",
-                22,
-                new Vector2(0f, -72f),
-                new Vector2(160f, 30f)
-            );
         }
 
         private void CreateNextBubble(Transform parent)
@@ -146,7 +129,7 @@ namespace SuikaGame.UI
             var bubble = CreateImage(
                 "Next Bubble",
                 parent,
-                SuikaAssetProvider.LoadUiSprite("NextBubble")
+                SuikaAssetProvider.LoadUiSprite("Bubble")
             );
             SetRect(
                 bubble.rectTransform,
@@ -162,54 +145,6 @@ namespace SuikaGame.UI
                 new Vector2(74f, 74f),
                 new Vector2(0.5f, 0.5f)
             );
-        }
-
-        private void CreateLeaderboard(Transform parent)
-        {
-            var panel = CreateImage(
-                "Leaderboard Panel",
-                parent,
-                SuikaAssetProvider.LoadUiSprite("LeaderboardPanel")
-            );
-            SetRect(
-                panel.rectTransform,
-                new Vector2(128f, -474f),
-                new Vector2(264f, 392f),
-                new Vector2(0f, 1f)
-            );
-            CreateText(
-                "Leaderboard Title",
-                panel.transform,
-                "리더보드",
-                28,
-                new Vector2(0f, 162f),
-                new Vector2(220f, 44f)
-            );
-
-            var scores = new[] { 27572, 25427, 23637, 23026, 19807 };
-            for (var index = 0; index < scores.Length; index++)
-            {
-                var rowY = 94f - index * 52f;
-                var rank = index + 1;
-                var rankText = CreateText(
-                    $"Leaderboard Rank {rank}",
-                    panel.transform,
-                    rank.ToString(),
-                    20,
-                    new Vector2(-98f, rowY),
-                    new Vector2(36f, 36f)
-                );
-                rankText.color = Color.white;
-                var score = CreateText(
-                    $"Leaderboard Score {rank}",
-                    panel.transform,
-                    scores[index].ToString(),
-                    22,
-                    new Vector2(20f, rowY),
-                    new Vector2(160f, 36f)
-                );
-                score.color = Color.white;
-            }
         }
 
         private void CreateEvolutionRing(Transform parent)
@@ -244,7 +179,10 @@ namespace SuikaGame.UI
                 var position = new Vector2(Mathf.Cos(angle), Mathf.Sin(angle)) * radius;
                 var fruit = fruitFactory != null ? fruitFactory.GetDefinition(level) : null;
                 var icon = CreateImage($"Evolution Fruit {level}", ring.transform, fruit?.Sprite);
-                icon.color = fruit != null ? fruit.Color : Color.white;
+                icon.color =
+                    fruit?.Sprite != null ? Color.white
+                    : fruit != null ? fruit.Color
+                    : Color.white;
                 SetRect(icon.rectTransform, position, Vector2.one * 30f, new Vector2(0.5f, 0.5f));
             }
         }
@@ -260,7 +198,7 @@ namespace SuikaGame.UI
                 new Vector2(420f, 90f),
                 new Vector2(0.5f, 0.5f)
             );
-            gameOverText.color = new Color(0.92f, 0.25f, 0.18f);
+            gameOverText.color = Color.black;
             gameOverText.enabled = false;
         }
 
@@ -280,7 +218,10 @@ namespace SuikaGame.UI
             {
                 var next = fruitFactory.GetDefinition(spawner.NextLevel);
                 nextFruitImage.sprite = next?.Sprite ?? FruitSpriteFactory.GetCircleSprite();
-                nextFruitImage.color = next != null ? next.Color : Color.white;
+                nextFruitImage.color =
+                    next?.Sprite != null ? Color.white
+                    : next != null ? next.Color
+                    : Color.white;
             }
 
             if (gameOverText != null)
@@ -337,7 +278,7 @@ namespace SuikaGame.UI
             text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.fontSize = fontSize;
             text.alignment = TextAnchor.MiddleCenter;
-            text.color = new Color(1f, 0.95f, 0.82f);
+            text.color = Color.black;
             text.raycastTarget = false;
             SetRect(text.rectTransform, position, size, anchor);
             return text;

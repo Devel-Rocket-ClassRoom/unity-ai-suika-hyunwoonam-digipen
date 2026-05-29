@@ -14,13 +14,13 @@ namespace SuikaGame.Spawner
         private GameManager gameManager;
 
         [SerializeField]
-        private float minX = -2.7f;
+        private float minX = -2.95f;
 
         [SerializeField]
-        private float maxX = 2.7f;
+        private float maxX = 2.95f;
 
         [SerializeField]
-        private float spawnY = 3.4f;
+        private float spawnY = 4.25f;
 
         [SerializeField]
         private float keyboardMoveSpeed = 5.5f;
@@ -38,6 +38,7 @@ namespace SuikaGame.Spawner
         private float dropTorqueImpulse = 0.04f;
 
         private FruitController currentFruit;
+        private SpriteRenderer evolutionGuide;
         private int currentLevel;
         private int nextLevel;
         private float nextDropAllowedAt;
@@ -53,6 +54,7 @@ namespace SuikaGame.Spawner
             fruitFactory ??= FindFirstObjectByType<FruitRuntimeFactory>();
             gameManager ??= FindFirstObjectByType<GameManager>();
             aimX = transform.position.x;
+            CreateEvolutionGuide();
         }
 
         private void Start()
@@ -63,15 +65,42 @@ namespace SuikaGame.Spawner
             SpawnPreview();
         }
 
+        private void CreateEvolutionGuide()
+        {
+            var guideObject = new GameObject("Evolution Guide");
+            evolutionGuide = guideObject.AddComponent<SpriteRenderer>();
+            evolutionGuide.sprite = SuikaGame.Art.SuikaAssetProvider.LoadUiSprite("EvolutionGuide");
+            evolutionGuide.sortingOrder = 30; // Above fruits
+            evolutionGuide.color = Color.white;
+            guideObject.transform.localScale = Vector3.one * 0.85f;
+        }
+
         private void Update()
         {
             if (gameManager != null && !gameManager.IsPlaying)
             {
+                if (evolutionGuide != null)
+                    evolutionGuide.enabled = false;
                 return;
             }
 
             UpdateAim();
             UpdatePreviewPosition();
+
+            if (evolutionGuide != null)
+            {
+                evolutionGuide.enabled = currentFruit != null;
+                if (currentFruit != null)
+                {
+                    // Position guide slightly above the fruit
+                    // The guide looks like a cloud/hand holding the fruit from above
+                    evolutionGuide.transform.position = new Vector3(
+                        currentFruit.transform.position.x,
+                        currentFruit.transform.position.y + 0.35f,
+                        0f
+                    );
+                }
+            }
 
             if (Time.time >= nextDropAllowedAt && WantsDrop())
             {

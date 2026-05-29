@@ -1,5 +1,8 @@
 using NUnit.Framework;
+using SuikaGame.Art;
 using SuikaGame.Fruit;
+using UnityEngine;
+using UnityEngine.TestTools;
 
 namespace SuikaGame.Tests.EditMode
 {
@@ -27,6 +30,57 @@ namespace SuikaGame.Tests.EditMode
                 var expectedScore = definition.Level * (definition.Level + 1) / 2;
                 Assert.That(definition.MergeScore, Is.EqualTo(expectedScore));
             }
+        }
+
+        [Test]
+        public void MissionTwoFruitArt_LoadsSpritesForEveryFruitLevel()
+        {
+            var definitions = FruitCatalog.CreateDefaultDefinitions();
+
+            for (var index = 0; index < definitions.Count; index++)
+            {
+                Assert.That(
+                    definitions[index].Sprite,
+                    Is.Not.Null,
+                    $"Missing Mission 2 sprite for level {definitions[index].Level}."
+                );
+            }
+        }
+
+        [Test]
+        public void FruitController_LeavesRealSpritesUntinted()
+        {
+            var texture = new Texture2D(2, 2);
+            var sprite = Sprite.Create(
+                texture,
+                new Rect(0f, 0f, 2f, 2f),
+                new Vector2(0.5f, 0.5f),
+                2f
+            );
+            var fruitObject = new GameObject("Fruit Under Test");
+            fruitObject.AddComponent<SpriteRenderer>();
+            fruitObject.AddComponent<Rigidbody2D>();
+            fruitObject.AddComponent<CircleCollider2D>();
+            var fruit = fruitObject.AddComponent<FruitController>();
+            var definition = new FruitDefinition(1, "Cherry", 0.23f, 1, Color.red, sprite);
+
+            fruit.Configure(definition, false, new PhysicsMaterial2D());
+
+            Assert.That(fruitObject.GetComponent<SpriteRenderer>().color, Is.EqualTo(Color.white));
+
+            Object.DestroyImmediate(sprite);
+            Object.DestroyImmediate(texture);
+            Object.DestroyImmediate(fruitObject);
+        }
+
+        [Test]
+        public void OptionalArtLookup_DoesNotWarnWhenFallbackWillBeUsed()
+        {
+            Assert.That(
+                SuikaAssetProvider.LoadBackgroundSprite("MissingOptionalBackground"),
+                Is.Null
+            );
+            Assert.That(SuikaAssetProvider.LoadUiSprite("MissingOptionalUiSprite"), Is.Null);
         }
     }
 }

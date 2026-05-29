@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 4b44b74f7950d27428875bfe2e91d67c
+guid: f1a08fc404a034544b72395ac2f888fb
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -6182139567355005811
-    second: Peach_0
+      213: -6403348867786874424
+    second: Grape_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  alignment: 9
+  spritePivot: {x: 0.4943182, y: 0.4943182}
+  spritePixelsToUnits: 84
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -152,13 +152,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Peach_0
+      name: Grape_0
       rect:
         serializedVersion: 2
-        x: 0
+        x: 1
         y: 1
-        width: 223
-        height: 218
+        width: 86
+        height: 86
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,8 +167,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: d84faef51d0a43aa0800000000000000
-      internalID: -6182139567355005811
+      spriteID: 8c1e9a2912cb227a0800000000000000
+      internalID: -6403348867786874424
       vertices: []
       indices: 
       edges: []
@@ -177,7 +177,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -187,7 +187,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Peach_0: -6182139567355005811
+      Grape_0: -6403348867786874424
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

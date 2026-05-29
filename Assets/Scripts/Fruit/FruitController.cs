@@ -72,7 +72,7 @@ namespace SuikaGame.Fruit
                 definition.Sprite != null
                     ? definition.Sprite
                     : FruitSpriteFactory.GetCircleSprite();
-            renderer.color = definition.Color;
+            renderer.color = definition.Sprite != null ? Color.white : definition.Color;
             transform.localScale = Vector3.one * (radius * 2f);
         }
 

@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: 5cad19833e3642e4ea566e445b49a8d3
+guid: 3feacba83a6d57f459d4f948f19ed688
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: 3776312371561069292
-    second: Melon_0
+      213: -1726675103522405407
+    second: Persimmon_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  alignment: 9
+  spritePivot: {x: 0.49603173, y: 0.5037594}
+  spritePixelsToUnits: 131
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -152,13 +152,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Melon_0
+      name: Persimmon_0
       rect:
         serializedVersion: 2
         x: 1
         y: 1
-        width: 307
-        height: 307
+        width: 124
+        height: 132
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,8 +167,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: cea7fcb1818286430800000000000000
-      internalID: 3776312371561069292
+      spriteID: 1e34904442e9908e0800000000000000
+      internalID: -1726675103522405407
       vertices: []
       indices: 
       edges: []
@@ -177,7 +177,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -187,7 +187,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Melon_0: 3776312371561069292
+      Persimmon_0: -1726675103522405407
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 

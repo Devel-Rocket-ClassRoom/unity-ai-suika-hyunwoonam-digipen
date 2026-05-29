@@ -80,20 +80,23 @@ namespace SuikaGame.Art
                 return null;
             }
 
-            return LoadSprite(string.Format(FruitPathFormat, level, FruitNames[level - 1]));
+            return LoadSprite(
+                string.Format(FruitPathFormat, level, FruitNames[level - 1]),
+                warnIfMissing: true
+            );
         }
 
         public static Sprite LoadBackgroundSprite(string assetName)
         {
-            return LoadSprite($"{BackgroundRoot}{assetName}.png");
+            return LoadSprite($"{BackgroundRoot}{assetName}.png", warnIfMissing: false);
         }
 
         public static Sprite LoadUiSprite(string assetName)
         {
-            return LoadSprite($"{UiRoot}{assetName}.png");
+            return LoadSprite($"{UiRoot}{assetName}.png", warnIfMissing: false);
         }
 
-        private static Sprite LoadSprite(string assetPath)
+        private static Sprite LoadSprite(string assetPath, bool warnIfMissing)
         {
 #if UNITY_EDITOR
             var sprite = AssetDatabase.LoadAssetAtPath<Sprite>(assetPath);
@@ -102,12 +105,15 @@ namespace SuikaGame.Art
                 return sprite;
             }
 
-            WarnMissingArt();
+            if (warnIfMissing)
+            {
+                WarnMissingFruitArt();
+            }
 #endif
             return null;
         }
 
-        private static void WarnMissingArt()
+        private static void WarnMissingFruitArt()
         {
             if (warnedMissingArt)
             {
@@ -116,7 +122,7 @@ namespace SuikaGame.Art
 
             warnedMissingArt = true;
             Debug.LogWarning(
-                "Suika art assets were not found under Assets/Art. Using generated fallback visuals until the approved PNG/Sprite assets are added."
+                "Suika fruit sprites were not found under Assets/Art/Fruits. Using generated fallback fruit visuals until the approved PNG/Sprite assets are added."
             );
         }
     }

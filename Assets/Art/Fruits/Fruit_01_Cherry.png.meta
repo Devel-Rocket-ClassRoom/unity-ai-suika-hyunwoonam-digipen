@@ -1,10 +1,10 @@
 fileFormatVersion: 2
-guid: b480feca0d16142428d5dca38c82b5e3
+guid: 114fcb9d8d7d17945b67b8dbf172c993
 TextureImporter:
   internalIDToNameTable:
   - first:
-      213: -8558258358756935692
-    second: Watermelon_0
+      213: -1435901459259225544
+    second: Cherry_0
   externalObjects: {}
   serializedVersion: 13
   mipmaps:
@@ -46,12 +46,12 @@ TextureImporter:
   nPOTScale: 0
   lightmap: 0
   compressionQuality: 50
-  spriteMode: 2
+  spriteMode: 1
   spriteExtrude: 1
   spriteMeshType: 1
-  alignment: 0
-  spritePivot: {x: 0.5, y: 0.5}
-  spritePixelsToUnits: 100
+  alignment: 9
+  spritePivot: {x: 0.48979592, y: 0.49253732}
+  spritePixelsToUnits: 63
   spriteBorder: {x: 0, y: 0, z: 0, w: 0}
   spriteGenerateFallbackPhysicsShape: 1
   alphaUsage: 1
@@ -152,13 +152,13 @@ TextureImporter:
     serializedVersion: 2
     sprites:
     - serializedVersion: 2
-      name: Watermelon_0
+      name: Cherry_0
       rect:
         serializedVersion: 2
-        x: 0
-        y: 0
-        width: 360
-        height: 360
+        x: 1
+        y: 1
+        width: 47
+        height: 65
       alignment: 0
       pivot: {x: 0, y: 0}
       border: {x: 0, y: 0, z: 0, w: 0}
@@ -167,8 +167,8 @@ TextureImporter:
       physicsShape: []
       tessellationDetail: -1
       bones: []
-      spriteID: 4f77646cd55fa3980800000000000000
-      internalID: -8558258358756935692
+      spriteID: 83a83640b37a21ce0800000000000000
+      internalID: -1435901459259225544
       vertices: []
       indices: 
       edges: []
@@ -177,7 +177,7 @@ TextureImporter:
     customData: 
     physicsShape: []
     bones: []
-    spriteID: 
+    spriteID: 5e97eb03825dee720800000000000000
     internalID: 0
     vertices: []
     indices: 
@@ -187,7 +187,7 @@ TextureImporter:
     spriteCustomMetadata:
       entries: []
     nameFileIdTable:
-      Watermelon_0: -8558258358756935692
+      Cherry_0: -1435901459259225544
   mipmapLimitGroupName: 
   pSDRemoveMatte: 0
   userData: 
